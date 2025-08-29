@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Learning Pod Signature Bingo App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #25275F 0%, #36B0C9 100%); margin: 0; padding: 10px; min-height: 100vh;">
+    
+    <div style="max-width: 500px; margin: 0 auto; background: #EAE7E4; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); overflow: hidden;">
+        
+        <div style="background: linear-gradient(45deg, #25275F, #36B0C9); color: white; padding: 15px; text-align: center;">
+            <h1 style="margin: 0; font-size: 1.5em; font-weight: 600; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🤖 AI Learning Pod Bingo 📚</h1>
+        </div>
+        
+        <div style="background: #EAE7E4; padding: 15px; text-align: center; border-bottom: 2px solid #EFAB92;">
+            <input type="text" id="playerName" placeholder="Enter your name" maxlength="20" style="padding: 10px; border: 2px solid #36B0C9; border-radius: 25px; font-size: 16px; font-family: 'Poppins', sans-serif; text-align: center; margin-bottom: 10px; width: 250px; max-width: 100%; background: white;">
+            <div id="progressText" style="font-size: 16px; font-weight: 600; color: #25275F; margin: 5px 0;">0/16 squares found</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px;">
+                <button onclick="toggleLeaderboard()" style="padding: 8px 15px; background: #36B0C9; color: white; border: none; border-radius: 20px; font-size: 12px; font-family: 'Poppins', sans-serif; cursor: pointer;">👥 Leaderboard</button>
+                <button onclick="shareProgress()" style="padding: 8px 15px; background: #EFAB92; color: white; border: none; border-radius: 20px; font-size: 12px; font-family: 'Poppins', sans-serif; cursor: pointer;">📢 Share Status</button>
+            </div>
+        </div>
+        
+        <!-- Leaderboard Panel -->
+        <div id="leaderboard" style="display: none; background: #36B0C9; color: white; padding: 15px; max-height: 200px; overflow-y: auto;">
+            <h3 style="margin: 0 0 10px 0; font-size: 16px; text-align: center;">🏆 Group Progress</h3>
+            <div id="leaderboardList" style="font-size: 14px;"></div>
+            <div style="text-align: center; margin-top: 10px; font-size: 12px; opacity: 0.8;">
+                Refreshes every 10 seconds
+            </div>
+        </div>
+        
+        <div style="padding: 15px; background: linear-gradient(145deg, #36B0C9, #EFAB92); font-size: 14px; font-weight: 500; text-align: center; color: white;">
+            <strong>Find people who match each description and tap the square!</strong><br>
+            First to get 4 in a row wins! 🎉
+            <div id="announcements" style="margin-top: 8px; font-size: 12px; font-style: italic; min-height: 20px;"></div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; padding: 15px; background: #EAE7E4;">
+            <div onclick="toggleSquare(0)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🤖📝 Has used ChatGPT to write lesson plans</span>
+            </div>
+            <div onclick="toggleSquare(1)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>📱💀 Still has a flip phone or knows someone who does</span>
+            </div>
+            <div onclick="toggleSquare(2)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🗂️💥 Has accidentally deleted an important file</span>
+            </div>
+            <div onclick="toggleSquare(3)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>📝✏️ Still writes things down on paper instead of typing</span>
+            </div>
+            
+            <div onclick="toggleSquare(4)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>⚡🚗 Drives a Tesla or other electric vehicle</span>
+            </div>
+            <div onclick="toggleSquare(5)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🏫📚 Can define "gibbush"</span>
+            </div>
+            <div onclick="toggleSquare(6)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🏀⚽ Coaches or sponsors a school club/team</span>
+            </div>
+            <div onclick="toggleSquare(7)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>📧😱 Incorrectly sent a teacher's note to My Milken</span>
+            </div>
+            
+            <div onclick="toggleSquare(8)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🌊❌ Did NOT go to the beach this summer</span>
+            </div>
+            <div onclick="toggleSquare(9)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🍕🏆 Knows the best kosher pizza in LA</span>
+            </div>
+            <div onclick="toggleSquare(10)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🏃‍♀️⏰ Has sprinted across campus between classes</span>
+            </div>
+            <div onclick="toggleSquare(11)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>📱🔊 Uses voice-to-text instead of typing</span>
+            </div>
+            
+            <div onclick="toggleSquare(12)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🐟🥪 Prefers tuna over egg salad</span>
+            </div>
+            <div onclick="toggleSquare(13)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>✈️🏖️ Has asked AI to help plan a vacation</span>
+            </div>
+            <div onclick="toggleSquare(14)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>📱👟 Tracks their steps on their phone or watch</span>
+            </div>
+            <div onclick="toggleSquare(15)" style="background: linear-gradient(145deg, #ffffff, #EAE7E4); border: 2px solid #36B0C9; padding: 12px; text-align: center; font-size: 11px; font-weight: 500; min-height: 80px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 15px; color: #25275F; transition: all 0.4s ease;">
+                <span>🤖⚙️ Built a custom AI tool or bot</span>
+            </div>
+        </div>
+        
+        <!-- THE MAIN BUTTON WITH INLINE DARK BLUE STYLING -->
+        <button id="bingoButton" onclick="checkBingo()" style="width: 100%; padding: 20px; background: #25275F; background-color: #25275F; color: #EAE7E4; border: none; font-size: 24px; font-weight: 700; font-family: 'Poppins', sans-serif; cursor: pointer; text-transform: uppercase; letter-spacing: 3px; margin-top: 10px; box-shadow: 0 4px 15px rgba(37, 39, 95, 0.3);">
+            🎉 I GOT BINGO! 🎉
+        </button>
+    </div>
+    
+    <div id="winnerModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #EAE7E4; padding: 40px; border-radius: 20px; text-align: center; max-width: 90%; border: 3px solid #36B0C9;">
+            <div style="font-size: 48px; font-weight: 700; color: #EFAB92; margin-bottom: 20px;">🎉 BINGO! 🎉</div>
+            <h2 id="winnerName" style="color: #25275F; font-weight: 600;">Congratulations!</h2>
+            <p style="color: #25275F;">You found 4 in a row!</p>
+            <div id="winnerRank" style="color: #36B0C9; font-size: 18px; margin: 10px 0;"></div>
+            <button onclick="resetGame()" style="padding: 15px 30px; background: #25275F; background-color: #25275F; color: #EAE7E4; border: none; border-radius: 25px; font-size: 16px; font-weight: 500; font-family: 'Poppins', sans-serif; cursor: pointer; margin: 10px;">Play Again</button>
+            <button onclick="closeModal()" style="padding: 15px 30px; background: #25275F; background-color: #25275F; color: #EAE7E4; border: none; border-radius: 25px; font-size: 16px; font-weight: 500; font-family: 'Poppins', sans-serif; cursor: pointer; margin: 10px;">Close</button>
+        </div>
+    </div>
+
+    <script>
+        let foundSquares = new Array(16).fill(false);
+        let playerName = '';
+        let gameData = JSON.parse(localStorage.getItem('bingoGameData')) || {
+            players: {},
+            winners: [],
+            startTime: new Date().toISOString()
+        };
+        let leaderboardVisible = false;
+
+        // Auto-refresh leaderboard
+        setInterval(() => {
+            if (leaderboardVisible) {
+                updateLeaderboard();
+            }
+            showRandomAnnouncement();
+        }, 10000);
+
+        function saveGameData() {
+            localStorage.setItem('bingoGameData', JSON.stringify(gameData));
+        }
+
+        function updatePlayerData() {
+            if (!playerName) return;
+            
+            const count = foundSquares.filter(found => found).length;
+            gameData.players[playerName] = {
+                name: playerName,
+                progress: count,
+                hasBingo: hasBingo(),
+                lastUpdate: new Date().toISOString(),
+                squares: [...foundSquares]
+            };
+            saveGameData();
+        }
+
+        function toggleLeaderboard() {
+            const leaderboard = document.getElementById('leaderboard');
+            leaderboardVisible = !leaderboardVisible;
+            leaderboard.style.display = leaderboardVisible ? 'block' : 'none';
+            if (leaderboardVisible) {
+                updateLeaderboard();
+            }
+        }
+
+        function updateLeaderboard() {
+            const list = document.getElementById('leaderboardList');
+            const players = Object.values(gameData.players).sort((a, b) => b.progress - a.progress);
+            
+            if (players.length === 0) {
+                list.innerHTML = '<div style="text-align: center; opacity: 0.7;">No players yet!</div>';
+                return;
+            }
+            
+            let html = '';
+            players.forEach((player, index) => {
+                const icon = player.hasBingo ? '🏆' : '🎯';
+                const status = player.hasBingo ? 'BINGO!' : `${player.progress}/16`;
+                html += `<div style="display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.2);">
+                    <span>${icon} ${player.name}</span>
+                    <span style="font-weight: 600;">${status}</span>
+                </div>`;
+            });
+            
+            list.innerHTML = html;
+        }
+
+        function shareProgress() {
+            if (!playerName) {
+                alert('Please enter your name first!');
+                return;
+            }
+            
+            const count = foundSquares.filter(found => found).length;
+            const status = hasBingo() ? '🏆 I got BINGO!' : `📊 I have ${count}/16 squares`;
+            
+            // Add announcement
+            addAnnouncement(`${playerName}: ${status}`);
+            
+            // Update progress
+            updatePlayerData();
+            
+            alert(`Your progress has been shared! ${status}`);
+        }
+
+        function addAnnouncement(message) {
+            const announcements = document.getElementById('announcements');
+            announcements.innerHTML = message;
+            announcements.style.animation = 'none';
+            setTimeout(() => {
+                announcements.style.animation = 'fadeIn 0.5s ease';
+            }, 10);
+        }
+
+        function showRandomAnnouncement() {
+            const players = Object.values(gameData.players);
+            if (players.length === 0) return;
+            
+            const messages = [
+                `${players.length} players are actively playing!`,
+                `Leading player has ${Math.max(...players.map(p => p.progress))} squares!`,
+                `${players.filter(p => p.hasBingo).length} players have achieved BINGO!`,
+                `Most recent: ${players[players.length - 1]?.name} joined the game`
+            ];
+            
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            addAnnouncement(randomMessage);
+        }
+
+        function toggleSquare(index) {
+            const cells = document.querySelectorAll('[onclick^="toggleSquare"]');
+            const cell = cells[index];
+            foundSquares[index] = !foundSquares[index];
+            
+            if (foundSquares[index]) {
+                cell.style.background = 'linear-gradient(145deg, #EFAB92, #DD5240)';
+                cell.style.color = 'white';
+                cell.style.borderColor = '#DD5240';
+                cell.innerHTML = cell.innerHTML + '<span style="position: absolute; top: 5px; right: 8px; font-size: 16px; font-weight: bold;">✓</span>';
+            } else {
+                cell.style.background = 'linear-gradient(145deg, #ffffff, #EAE7E4)';
+                cell.style.color = '#25275F';
+                cell.style.borderColor = '#36B0C9';
+                cell.innerHTML = cell.innerHTML.replace(/<span[^>]*>✓<\/span>/, '');
+            }
+            
+            updateProgress();
+            updatePlayerData();
+            
+            const bingoBtn = document.getElementById('bingoButton');
+            if (hasBingo()) {
+                bingoBtn.style.background = '#DD5240';
+                bingoBtn.style.backgroundColor = '#DD5240';
+                bingoBtn.style.color = 'white';
+                bingoBtn.innerHTML = '🏆 YOU HAVE BINGO! CLAIM IT! 🏆';
+            } else {
+                bingoBtn.style.background = '#25275F';
+                bingoBtn.style.backgroundColor = '#25275F';
+                bingoBtn.style.color = '#EAE7E4';
+                bingoBtn.innerHTML = '🎉 I GOT BINGO! 🎉';
+            }
+        }
+
+        function updateProgress() {
+            const count = foundSquares.filter(found => found).length;
+            document.getElementById('progressText').innerHTML = `${count}/16 squares found`;
+        }
+
+        function hasBingo() {
+            // Check rows
+            for (let row = 0; row < 4; row++) {
+                if (foundSquares[row*4] && foundSquares[row*4+1] && foundSquares[row*4+2] && foundSquares[row*4+3]) {
+                    return true;
+                }
+            }
+            
+            // Check columns
+            for (let col = 0; col < 4; col++) {
+                if (foundSquares[col] && foundSquares[col+4] && foundSquares[col+8] && foundSquares[col+12]) {
+                    return true;
+                }
+            }
+            
+            // Check diagonals
+            if (foundSquares[0] && foundSquares[5] && foundSquares[10] && foundSquares[15]) {
+                return true;
+            }
+            if (foundSquares[3] && foundSquares[6] && foundSquares[9] && foundSquares[12]) {
+                return true;
+            }
+            
+            return false;
+        }
+
+        function checkBingo() {
+            if (!playerName) {
+                alert('Please enter your name first!');
+                return;
+            }
+            
+            if (hasBingo()) {
+                // Track winner
+                const winnerInfo = {
+                    name: playerName,
+                    time: new Date().toISOString(),
+                    rank: gameData.winners.length + 1
+                };
+                
+                if (!gameData.winners.find(w => w.name === playerName)) {
+                    gameData.winners.push(winnerInfo);
+                    saveGameData();
+                }
+                
+                document.getElementById('winnerName').innerHTML = `${playerName} Wins!`;
+                document.getElementById('winnerRank').innerHTML = `🏅 Winner #${winnerInfo.rank}`;
+                document.getElementById('winnerModal').style.display = 'block';
+                
+                // Announce winner
+                addAnnouncement(`🎉 ${playerName} got BINGO! (Winner #${winnerInfo.rank})`);
+                
+                // Confetti effect
+                for (let i = 0; i < 50; i++) {
+                    createConfetti();
+                }
+            } else {
+                alert('Not quite yet! You need 4 squares in a row (horizontal, vertical, or diagonal)');
+            }
+        }
+
+        function createConfetti() {
+            const confetti = document.createElement('div');
+            confetti.style.position = 'fixed';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.top = '-10px';
+            confetti.style.width = '10px';
+            confetti.style.height = '10px';
+            confetti.style.backgroundColor = ['#DD5240', '#EFAB92', '#36B0C9', '#25275F', '#EAE7E4'][Math.floor(Math.random() * 5)];
+            confetti.style.pointerEvents = 'none';
+            confetti.style.zIndex = '1001';
+            document.body.appendChild(confetti);
+
+            const fall = confetti.animate([
+                { transform: 'translateY(-10px) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(100vh) rotate(720deg)`, opacity: 0 }
+            ], {
+                duration: 3000,
+                easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+            });
+
+            fall.addEventListener('finish', () => {
+                confetti.remove();
+            });
+        }
+
+        function resetGame() {
+            foundSquares = new Array(16).fill(false);
+            const cells = document.querySelectorAll('[onclick^="toggleSquare"]');
+            cells.forEach(cell => {
+                cell.style.background = 'linear-gradient(145deg, #ffffff, #EAE7E4)';
+                cell.style.color = '#25275F';
+                cell.style.borderColor = '#36B0C9';
+                cell.innerHTML = cell.innerHTML.replace(/<span[^>]*>✓<\/span>/, '');
+            });
+            updateProgress();
+            updatePlayerData();
+            
+            const bingoBtn = document.getElementById('bingoButton');
+            bingoBtn.style.background = '#25275F';
+            bingoBtn.style.backgroundColor = '#25275F';
+            bingoBtn.style.color = '#EAE7E4';
+            bingoBtn.innerHTML = '🎉 I GOT BINGO! 🎉';
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('winnerModal').style.display = 'none';
+        }
+
+        // Save player name with debounce to avoid creating entries for every keystroke
+        let nameTimeout;
+        document.getElementById('playerName').addEventListener('input', function() {
+            const newName = this.value.trim();
+            
+            // Clear previous timeout
+            if (nameTimeout) {
+                clearTimeout(nameTimeout);
+            }
+            
+            // Only update player data after user stops typing for 1 second
+            nameTimeout = setTimeout(() => {
+                if (newName && newName.length >= 2) { // Require at least 2 characters
+                    // Remove old player data if name changed
+                    if (playerName && playerName !== newName && gameData.players[playerName]) {
+                        delete gameData.players[playerName];
+                    }
+                    playerName = newName;
+                    updatePlayerData();
+                }
+            }, 1000);
+        });
+
+        // Load existing game state
+        window.addEventListener('load', () => {
+            showRandomAnnouncement();
+        });
+    </script>
+</body>
+</html>
